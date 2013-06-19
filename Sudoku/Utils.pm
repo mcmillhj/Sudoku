@@ -12,10 +12,12 @@ sub min_key {
 	# square with the fewest possibilities
 	for my $k ( @$squares_ref ) {
 		if( length( $grid_ref->{$k} ) > 1 ) {
-			if( length($grid_ref->{$k} ) < $min) {			
-				$min = length($grid_ref->{$k});
-				$min_key = $k;
-			}
+			$min_key = $k;
+			last;
+			#if( length($grid_ref->{$k} ) < $min) {			
+			#	$min = length($grid_ref->{$k});
+			#	$min_key = $k;
+			#}
 		}
 	}
 	
@@ -26,7 +28,7 @@ sub min_key {
 # Takes an Array reference nested at most 1 time and
 # returns a flat Array with the same elements
 sub flatten {
-	my $arr_ref = $_[0];
+	my ($arr_ref) = @_;
 	my @flattened;
 
 	# iterate through nested array and flatten

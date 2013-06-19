@@ -168,9 +168,9 @@ sub parse_grid {
 	my $grid_ref = grid_values($grid);
 
 	foreach my $key ( keys %{$grid_ref} ) {
-		my ( $s, $d ) = ( $key, $grid_ref->{$key} );
+		my $d = $grid_ref->{$key};
 
-		if ( index( $digits, $d ) != -1 && not assign( \%values, $s, $d ) ) {
+		if ( index( $digits, $d ) != -1 && not assign( \%values, $key, $d ) ) {
 			return 0;    # Fail if we can't assign d to square s
 		}
 	}
@@ -183,9 +183,7 @@ sub grid_values {
 	my ($grid) = @_;
 
 	# ignore invalid characters
-	my @chars =
-	  grep { index( $digits, $_ ) != -1 || index( "0.", $_ ) != -1 }
-	  split( //, $grid );
+	my @chars = $grid =~ m/([\d.])/g;
 
 	# map squares on the grid to characters from STDIN
 	my %grid_hash;
@@ -253,10 +251,10 @@ sub eliminate {
 		my @dplaces =
 		  map { index( $values_ref->{$_}, $d ) != -1 ? $_ : () } @$u;
 
-		if ( ( $#dplaces + 1 ) == 0 ) {
+		if ( scalar @dplaces == 0 ) {
 			return 0;
 		}
-		elsif ( ( $#dplaces + 1 ) == 1 ) {
+		elsif ( scalar @dplaces == 1 ) {
 			return 0 if not assign( $values_ref, $dplaces[0], $d );
 		}
 	}
